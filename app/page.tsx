@@ -16,32 +16,38 @@ export default function Home() {
     setFileName('');
   };
 
-  const handleUpload = async () => {
+ const handleUpload = async () => {
   if (!file) {
     setStatus('❌ Pehle ZIP file select kar bhai!');
     return;
   }
 
-  const formData = new FormData();
-  formData.append('zipFile', file);
-
   setLoading(true);
   setStatus('⏳ Upload ho raha hai... thoda wait kar.');
-  setDownloadUrl('');
-  setFileName('');
 
   try {
-    const response = await fetch('/api/upload', {
+    // 1. Browser se seedha Blob pe upload
+    const blob = await upload(file.name, file, {
+      access: 'public',
+      handleUploadUrl: '/api/upload/client-upload',
+    });
+
+    setStatus('⏳ ZIP process ho raha hai...');
+    setDownloadUrl('');
+    setFileName('');
+
+    // 2. Ab Blob URL ko processing API pe bhej
+    const response = await fetch('/api/upload/process', {
       method: 'POST',
-      body: formData,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ blobUrl: blob.url, fileName: file.name }),
     });
 
     const data = await response.json();
-
-    if (!response.ok) throw new Error(data.error || 'Upload failed');
+    if (!response.ok) throw new Error(data.error);
 
     setStatus(`✅ Kaam ho gaya! Company: ${data.companyName}`);
-    setDownloadUrl(data.downloadUrl);  // Blob URL
+    setDownloadUrl(data.downloadUrl);
     setFileName(data.fileName);
   } catch (error) {
     const errMsg = error instanceof Error ? error.message : 'Unknown error';
