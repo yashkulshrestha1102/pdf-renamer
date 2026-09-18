@@ -3,14 +3,14 @@
 import { useState } from 'react';
 
 export default function Home() {
-  const [file, setFile] = useState(null);
+  const [file, setFile] = useState<File | null>(null);
   const [status, setStatus] = useState('');
   const [downloadUrl, setDownloadUrl] = useState('');
   const [fileName, setFileName] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFile(e.target.files?.[0] || null);
     setStatus('');
     setDownloadUrl('');
     setFileName('');
@@ -44,7 +44,8 @@ export default function Home() {
       setDownloadUrl(data.downloadUrl);
       setFileName(data.fileName);
     } catch (error) {
-      setStatus('❌ Error: ' + error.message);
+      const errMsg = error instanceof Error ? error.message : 'Unknown error';
+      setStatus('❌ Error: ' + errMsg);
     } finally {
       setLoading(false);
     }
