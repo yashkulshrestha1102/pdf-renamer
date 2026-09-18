@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { upload } from '@vercel/blob/client';   
 
 export default function Home() {
   const [file, setFile] = useState<File | null>(null);
