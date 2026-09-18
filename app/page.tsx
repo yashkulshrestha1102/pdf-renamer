@@ -17,39 +17,39 @@ export default function Home() {
   };
 
   const handleUpload = async () => {
-    if (!file) {
-      setStatus('❌ Pehle ZIP file select kar bhai!');
-      return;
-    }
+  if (!file) {
+    setStatus('❌ Pehle ZIP file select kar bhai!');
+    return;
+  }
 
-    const formData = new FormData();
-    formData.append('zipFile', file);
+  const formData = new FormData();
+  formData.append('zipFile', file);
 
-    setLoading(true);
-    setStatus('⏳ Upload ho raha hai... thoda wait kar.');
-    setDownloadUrl('');
-    setFileName('');
+  setLoading(true);
+  setStatus('⏳ Upload ho raha hai... thoda wait kar.');
+  setDownloadUrl('');
+  setFileName('');
 
-    try {
-      const response = await fetch('/api/upload', {
-        method: 'POST',
-        body: formData,
-      });
+  try {
+    const response = await fetch('/api/upload', {
+      method: 'POST',
+      body: formData,
+    });
 
-      const data = await response.json();
+    const data = await response.json();
 
-      if (!response.ok) throw new Error(data.error || 'Upload failed');
+    if (!response.ok) throw new Error(data.error || 'Upload failed');
 
-      setStatus(`✅ Kaam ho gaya! Company: ${data.companyName}`);
-      setDownloadUrl(data.downloadUrl);
-      setFileName(data.fileName);
-    } catch (error) {
-      const errMsg = error instanceof Error ? error.message : 'Unknown error';
-      setStatus('❌ Error: ' + errMsg);
-    } finally {
-      setLoading(false);
-    }
-  };
+    setStatus(`✅ Kaam ho gaya! Company: ${data.companyName}`);
+    setDownloadUrl(data.downloadUrl);  // Blob URL
+    setFileName(data.fileName);
+  } catch (error) {
+    const errMsg = error instanceof Error ? error.message : 'Unknown error';
+    setStatus('❌ Error: ' + errMsg);
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <main className="min-h-screen flex items-center justify-center bg-gray-100 p-4">

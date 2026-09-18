@@ -25,11 +25,13 @@ export async function POST(request) {
     await writeFile(zipPath, Buffer.from(bytes));
 
     console.log(`📦 Processing job: ${jobId}`);
-    const outputZipPath = await processZip(zipPath, jobId, tmpDir);
+    const result = await processZip(zipPath, jobId, tmpDir);
 
     return NextResponse.json({
       success: true,
-      downloadUrl: `/api/download/${jobId}`,
+      downloadUrl: result.blobUrl,
+      fileName: result.fileName,
+      companyName: result.companyName,
       jobId,
     });
   } catch (error) {
