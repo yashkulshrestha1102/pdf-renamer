@@ -12,7 +12,8 @@ export async function POST(request) {
         return {
           allowedContentTypes: ['application/zip', 'application/x-zip-compressed'],
           maximumSizeInBytes: 500 * 1024 * 1024, // 500MB
-          addRandomSuffix: false,
+          addRandomSuffix: true,   // ✅ true kar de
+          allowOverwrite: true, 
         };
       },
       onUploadCompleted: async ({ blob }) => {
