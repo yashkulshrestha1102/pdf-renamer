@@ -8,7 +8,7 @@ export async function POST(request) {
     const jsonResponse = await handleUpload({
       body,
       request,
-      onBeforeGenerateToken: async (pathname) => {
+      onBeforeGenerateToken: async () => {
         return {
           allowedContentTypes: ['application/zip', 'application/x-zip-compressed'],
           maximumSizeInBytes: 500 * 1024 * 1024, // 500MB
